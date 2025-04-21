@@ -1,6 +1,9 @@
 library(shiny)
 library(treemap)
 library(tidyverse)
+library(aws.s3)
+
+Sys.setenv(AWS_DEFAULT_REGION = "eu-north-1") 
 
 company <- "AAPL"
 # Define custom colors
@@ -19,14 +22,14 @@ ui <- fluidPage(
     plotOutput("treemapPlot"),
     plotOutput("recommendationPlot")
   )
-  
 )
 
 server <- function(input, output) {
   output$treemapPlot <- renderPlot({
     # Replace with actual data source
-    stock_df_joined <- read.csv("stock_df_joined.csv")
-
+    stock_df_joined <- s3read_using(FUN = read.csv, 
+                                    object = "processed/stock_df_joined.csv", 
+                                    bucket = "snp500-stocks")
     treemap(stock_df_joined,
             index = "Symbol",
             vSize = "marketCapitalization",
@@ -38,7 +41,9 @@ server <- function(input, output) {
   })
   output$recommendationPlot <- renderPlot({
     # Replace with actual data source
-    recommendations_df_clean <- read.csv("recommendations.csv")
+    recommendations_df_clean <- s3read_using(FUN = read.csv, 
+                                             object = "processed/finnhub_recommendations.csv", 
+                                             bucket = "snp500-stocks")
     # Pivot to long format
 df_long <- recommendations_df_clean %>%
     filter(symbol == company) %>%  
