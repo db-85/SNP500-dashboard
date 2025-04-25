@@ -6,13 +6,9 @@ library(httr)
 library(ggplot2)
 
 
-<<<<<<< HEAD
-Sys.setenv(AWS_DEFAULT_REGION = "eu-north-1") 
-=======
 Sys.setenv("AWS_ACCESS_KEY_ID" = readLines("AWS_ACCESS_KEY"),
            "AWS_SECRET_ACCESS_KEY" = readLines("AWS_SECRET_ACCESS_KEY"),
            "AWS_DEFAULT_REGION" = "eu-north-1")  # or your region
->>>>>>> 0288bd5 (Update)
 
 bucket <- "snp500-stocks"
 prefix <- "raw/stock_prices/finnhub_quotes/"  # optional
